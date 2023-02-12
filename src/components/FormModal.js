@@ -7,7 +7,7 @@ import { DEFAULT_SELECTED } from "../helpers/constants";
 const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) => {
   const [user, setUser] = useState(userInfo);
   const [error, setError] = useState('');
-  const [isEdit, setIsEdit] = useState(Object.keys(userInfo).length > 0);
+  const [isEdit] = useState(Object.keys(userInfo).length > 0);
 
   const handleSubmit = e => {
     e.preventDefault();
