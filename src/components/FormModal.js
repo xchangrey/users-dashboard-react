@@ -18,6 +18,7 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
         selected: DEFAULT_SELECTED, 
         createdOn: timestamp(),
       });
+      setUser({});
       handleToggleModal();
     } else {
       const userError = handleAdd({
@@ -49,7 +50,7 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
       <div className="modal-content">
         <h2 className="modal-title">{`${text} User Information`}</h2>
         {error && <p className="error">{error}</p>}
-        <button className="close-button" onClick={(e) => handleToggleModal()}>
+        <button className="close-button" onClick={handleToggleModal}>
           <FontAwesomeIcon icon={faClose} />
         </button>
         <form onSubmit={handleSubmit}>

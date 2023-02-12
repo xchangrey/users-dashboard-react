@@ -118,6 +118,10 @@ const UsersTable = () => {
     if(hasSelectedUser){
       resetSelectedUser();
     }
+
+    if (!showModal && !hasSelectedUser){
+      setUserInfo({});
+    }
   }
 
   const handleEditUserClick = () => {
