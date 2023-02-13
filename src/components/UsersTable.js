@@ -3,6 +3,7 @@ import FormModal from "./FormModal";
 import Actions from "./Actions";
 import { DEFAULT_SELECTED, TITLE } from "../helpers/constants";
 import { usersDummyData } from "../helpers/usersDummyData";
+import User from "./User";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -148,21 +149,11 @@ const UsersTable = () => {
         <tbody>
           {filteredUsers.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center' }}>No users listed</td></tr>}
           {filteredUsers.map((user) => (
-            <tr key={user.id} data-testid='user-entry'>
-              <td>
-                <input
-                  className="selectCheckbox"
-                  type="checkbox"
-                  checked={user.selected}
-                  onChange={() => handleCheckboxChange(user.id)}
-                />
-              </td>
-              <td>{user.firstName}</td>
-              <td>{user.lastName}</td>
-              <td>{user.email}</td>
-              <td>{user.status.toUpperCase()}</td>
-              <td>{user.createdOn}</td>
-            </tr>
+            <User 
+              key={user.id}
+              user={user}
+              handleCheckboxChange={handleCheckboxChange}
+            />
           ))}
         </tbody>
       </table>
