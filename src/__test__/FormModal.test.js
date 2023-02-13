@@ -1,7 +1,9 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, cleanup } from '@testing-library/react';
 import FormModal from '../components/FormModal';
 import { timestamp } from '../helpers/utils';
+
+afterEach(cleanup);
 
 describe('FormModal component', () => {
   it('should render the form correctly', () => {
@@ -122,14 +124,14 @@ describe('FormModal component', () => {
     const submitBtn = getByText("EDIT");
 
     fireEvent.change(firstNameInput, { target: { value: "Jane" } });
-    fireEvent.change(lastNameInput, { target: { value: "Doe" } });
+    fireEvent.change(lastNameInput, { target: { value: "Does" } });
     fireEvent.change(emailInput, { target: { value: "janedoe@email.com" } });
     fireEvent.change(statusInput, { target: { value: "inactive" } });
     fireEvent.click(submitBtn);
 
     expect(mockEdit).toHaveBeenCalledWith({
       firstName: "Jane",
-      lastName: "Doe",
+      lastName: "Does",
       email: "janedoe@email.com",
       status: "inactive",
       selected: false,

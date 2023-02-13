@@ -1,6 +1,8 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, cleanup } from '@testing-library/react';
 import Actions from '../components/Actions';
+
+afterEach(cleanup);
 
 describe('Actions', () => {
   it('displays add user button', () => {

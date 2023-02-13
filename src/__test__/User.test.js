@@ -3,6 +3,8 @@ import { render, fireEvent } from '@testing-library/react';
 import User from '../components/User';
 import { usersDummyData } from '../helpers/usersDummyData';
 
+afterEach(cleanup);
+
 describe('User', () => {
   it('displays user information', () => {
     const handleCheckboxChange = jest.fn();
