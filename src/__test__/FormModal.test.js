@@ -85,8 +85,6 @@ describe('FormModal component', () => {
     fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
     fireEvent.change(emailInput, { target: { value: 'john.doe@example.com' } });
     fireEvent.change(statusInput, { target: { value: 'Active' } });
-
-    
     fireEvent.click(submitButton);
 
     expect(handleAdd).toHaveBeenCalledWith({
