@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FormModal from "./FormModal";
-import { timestamp } from "../helpers/utils";
 import Actions from "./Actions";
 import { DEFAULT_SELECTED, TITLE } from "../helpers/constants";
+import { usersDummyData } from "../helpers/usersDummyData";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -12,45 +12,7 @@ const UsersTable = () => {
   const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    const dummyUsers = [
-      { 
-        id: 1, 
-        firstName: "John", 
-        lastName: "Doe", 
-        email: 'john.doe@gmail.com', 
-        status: 'initiated',
-        createdOn: timestamp(), 
-        selected: DEFAULT_SELECTED, 
-      },
-      { 
-        id: 2, 
-        firstName: "Jane", 
-        lastName: "Doe", 
-        email: 'jane.doe@gmail.com', 
-        status: 'registered',
-        createdOn: timestamp(), 
-        selected: DEFAULT_SELECTED, 
-      },
-      { 
-        id: 3, 
-        firstName: "Emily", 
-        lastName: "Brown", 
-        email: 'emily.brown@gmail.com', 
-        status: 'inactive',
-        createdOn: timestamp(), 
-        selected: DEFAULT_SELECTED, 
-      },
-      { 
-        id: 4, 
-        firstName: "Pepe", 
-        lastName: "Smith", 
-        email: 'pepe.smith@gmail.com', 
-        status: 'registered',
-        createdOn: timestamp(), 
-        selected: DEFAULT_SELECTED, 
-      },
-    ];
-    setUsers(dummyUsers);
+    setUsers(usersDummyData);
   }, []);
 
   const handleCheckboxChange = (id) => {
@@ -156,17 +118,17 @@ const UsersTable = () => {
 
   return (
     <div>
-      <div className="header" style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: '#ddd'}}>
-      <h2 style={{marginLeft: '20px', padding: '5px'}}>{TITLE.toUpperCase()}</h2>
-      <Actions 
-        handleToggleModal={handleToggleModal}
-        hasSelectedUser={hasSelectedUser} 
-        handleDelete={handleDelete}
-        handleEditUserClick={handleEditUserClick}
-        handleSearch={handleSearch}
-      />
+      <div className="header">
+        <h2 className="header-title">{TITLE.toUpperCase()}</h2>
+        <Actions
+          handleToggleModal={handleToggleModal}
+          hasSelectedUser={hasSelectedUser} 
+          handleDelete={handleDelete}
+          handleEditUserClick={handleEditUserClick}
+          handleSearch={handleSearch}
+        />
       </div>
-      <table>
+      <table className="users-table">
         <thead>
           <tr>
             <th>
@@ -186,9 +148,10 @@ const UsersTable = () => {
         <tbody>
           {filteredUsers.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center' }}>No users listed</td></tr>}
           {filteredUsers.map((user) => (
-            <tr key={user.id}>
+            <tr key={user.id} data-testid='user-entry'>
               <td>
                 <input
+                  className="selectCheckbox"
                   type="checkbox"
                   checked={user.selected}
                   onChange={() => handleCheckboxChange(user.id)}

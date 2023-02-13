@@ -10,10 +10,11 @@ const Actions = ({
 }) => {
   return(
     <div className="actions">
-      <button onClick={handleToggleModal} className="action-button">
+      <button data-testid='addUser' onClick={handleToggleModal} className="action-button">
         <FontAwesomeIcon icon={faPlus} />
       </button>
       <button 
+        data-testid='editUser'
         disabled={!hasSelectedUser}
         onClick={handleEditUserClick} 
         className="action-button"
@@ -21,6 +22,7 @@ const Actions = ({
         <FontAwesomeIcon icon={faEdit} />
       </button>
       <button 
+        data-testid='deleteUser'
         disabled={!hasSelectedUser}
         onClick={handleDelete} 
         className="action-button"

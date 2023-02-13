@@ -21,15 +21,15 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
       setUser({});
       handleToggleModal();
     } else {
-      const userError = handleAdd({
+      const error = handleAdd({
         ...user,
         selected: DEFAULT_SELECTED, 
         createdOn: timestamp(),
       });
 
-      setError(userError);
+      setError(error);
 
-      if (!userError) {
+      if (!error) {
         setUser({});
         setError('');
         handleToggleModal();
@@ -56,22 +56,22 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
         <form onSubmit={handleSubmit}>
           <label>
             First Name:
-            <input className="form-input" type="text" name="firstName" value={user.firstName || ''} onChange={handleChange} required />
+            <input data-testid='firstName' className="form-input" type="text" name="firstName" value={user.firstName || ''} onChange={handleChange} required />
           </label>
           <br />
           <label>
             Last Name:
-            <input className="form-input" type="text" name="lastName" value={user.lastName || ''} onChange={handleChange} required />
+            <input data-testid='lastName' className="form-input" type="text" name="lastName" value={user.lastName || ''} onChange={handleChange} required />
           </label>
           <br />
           <label>
             Email:
-            <input className="form-input" type="email" name="email" value={user.email || ''} onChange={handleChange} required />
+            <input data-testid='email' className="form-input" type="email" name="email" value={user.email || ''} onChange={handleChange} required />
           </label>
           <br />
           <label>
             Status:
-            <input className="form-input" type="text" name="status" value={user.status || ''} onChange={handleChange} required />
+            <input data-testid='status' className="form-input" type="text" name="status" value={user.status || ''} onChange={handleChange} required />
           </label>
           <br />
           <button type="submit">{text.toUpperCase()}</button>

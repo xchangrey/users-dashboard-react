@@ -63,7 +63,7 @@ p.error {
   flex: 1;
   padding: 10px;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .search-container i {
@@ -131,6 +131,17 @@ button[type="button"] {
 
 button[type="button"]:hover {
   background-color: #e1e1e1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ddd;
+}
+
+.header-title {
+  margin-left: 20px;
+  padding: 5px;
 }
 
 .modal-overlay {
