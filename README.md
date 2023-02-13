@@ -4,6 +4,8 @@ This project is based on the functional components of React. This UI displays in
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+You can preview the deployed version in [here](https://users-dashboard-react.vercel.app/).
+
 # Functionalities
 
 - You can view the list of Users in a table
