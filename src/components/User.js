@@ -9,6 +9,7 @@ const User = ({user, handleCheckboxChange }) => {
           onChange={() => handleCheckboxChange(user.id)}
         />
       </td>
+      <td>{user.userId}</td>
       <td>{user.firstName}</td>
       <td>{user.lastName}</td>
       <td>{user.email}</td>

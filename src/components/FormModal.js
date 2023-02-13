@@ -12,28 +12,28 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
   const handleSubmit = e => {
     e.preventDefault();
 
+    let userError;
+
     if (isEdit){
-      handleEdit({
+      userError = handleEdit({
         ...user,
         selected: DEFAULT_SELECTED, 
         createdOn: timestamp(),
       });
-      setUser({});
-      handleToggleModal();
     } else {
-      const error = handleAdd({
+      userError = handleAdd({
         ...user,
         selected: DEFAULT_SELECTED, 
         createdOn: timestamp(),
       });
+    }
 
-      setError(error);
+    setError(userError);
 
-      if (!error) {
-        setUser({});
-        setError('');
-        handleToggleModal();
-      }
+    if (!userError) {
+      setUser({});
+      setError('');
+      handleToggleModal();
     }
   };
 
@@ -54,6 +54,15 @@ const FormModal = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) 
           <FontAwesomeIcon icon={faClose} />
         </button>
         <form onSubmit={handleSubmit}>
+          {isEdit && (
+            <>
+              <label>
+                User ID:
+                <input data-testid='userId' className="form-input" type="text" name="userId" value={user.userId || ''} onChange={handleChange} required />
+              </label>
+              <br />
+            </>
+          )}
           <label>
             First Name:
             <input data-testid='firstName' className="form-input" type="text" name="firstName" value={user.firstName || ''} onChange={handleChange} required />

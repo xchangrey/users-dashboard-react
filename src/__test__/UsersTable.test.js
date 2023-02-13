@@ -10,6 +10,7 @@ describe('UsersTable', () => {
     const { getByText } = render(<UsersTable users={usersDummyData} />);
 
     usersDummyData.forEach(user => {
+      expect(getByText(user.userId)).toBeInTheDocument();
       expect(getByText(user.firstName)).toBeInTheDocument();
       expect(getByText(user.lastName)).toBeInTheDocument();
       expect(getByText(user.email)).toBeInTheDocument();

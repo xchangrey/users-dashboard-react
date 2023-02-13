@@ -7,3 +7,7 @@ export const timestamp = () => {
   
   return`${dayOfWeek}, ${monthDayYear} at ${timezone}`;
 }
+
+export const createUserId = (firstName, lastName) => {
+  return `${firstName}${lastName}`.toLowerCase().trim().replace(/\s/g, '');
+}

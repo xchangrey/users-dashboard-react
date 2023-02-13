@@ -93,7 +93,7 @@ describe('FormModal component', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
-      status: 'Active',
+      status: 'Active', 
       selected: false,
       createdOn: timestamp(),
     });
@@ -102,6 +102,7 @@ describe('FormModal component', () => {
   it("should update user info when form is submitted", () => {
     const mockEdit = jest.fn();
     const userInfo = {
+      userId: 'johndoe',
       firstName: "John",
       lastName: "Doe",
       email: "johndoe@email.com",
@@ -117,12 +118,14 @@ describe('FormModal component', () => {
       />
     );
 
+    const userIdInput = getByTestId('userId');
     const firstNameInput = getByTestId("firstName");
     const lastNameInput = getByTestId("lastName");
     const emailInput = getByTestId("email");
     const statusInput = getByTestId("status");
     const submitBtn = getByText("EDIT");
 
+    fireEvent.change(userIdInput, { target: { value: "janedoes" } });
     fireEvent.change(firstNameInput, { target: { value: "Jane" } });
     fireEvent.change(lastNameInput, { target: { value: "Does" } });
     fireEvent.change(emailInput, { target: { value: "janedoe@email.com" } });
@@ -130,6 +133,7 @@ describe('FormModal component', () => {
     fireEvent.click(submitBtn);
 
     expect(mockEdit).toHaveBeenCalledWith({
+      userId: 'janedoes',
       firstName: "Jane",
       lastName: "Does",
       email: "janedoe@email.com",

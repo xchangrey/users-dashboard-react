@@ -6,6 +6,7 @@ import { usersDummyData } from "../helpers/usersDummyData";
 import FormModal from "./FormModal";
 import Actions from "./Actions";
 import User from "./User";
+import { createUserId } from "../helpers/utils";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -46,6 +47,12 @@ const UsersTable = () => {
   };
 
   const handleEdit = (user) => {
+    const userIdExists = users.some((_user) => _user.userId === user.userId && user.userId !== userInfo.userId);
+
+    if (userIdExists) {
+      return 'User ID already exists...'
+    }
+
     setUsers(
       users.map((_user) => {
         if (_user.id === user.id){
@@ -65,7 +72,8 @@ const UsersTable = () => {
     }
 
     const newUser = {
-      id: users.length + 1,
+      id: users[users.length - 1]['id'] + 1,
+      userId: createUserId(user.firstName, user.lastName),
       ...user,
       selected: false,
     };
@@ -141,6 +149,7 @@ const UsersTable = () => {
                 onChange={handleSelectAll}
               />
             </th>
+            <th>User ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>

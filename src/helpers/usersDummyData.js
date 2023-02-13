@@ -3,7 +3,8 @@ import { DEFAULT_SELECTED } from "./constants";
 
 export const usersDummyData = [ 
   { 
-    id: 1, 
+    id: 1,
+    userId: 'johndoe', 
     firstName: "John", 
     lastName: "Doe", 
     email: 'john.doe@gmail.com', 
@@ -12,7 +13,8 @@ export const usersDummyData = [
     selected: DEFAULT_SELECTED, 
   },
   { 
-    id: 2, 
+    id: 2,
+    userId: 'janedoes', 
     firstName: "Jane", 
     lastName: "Does", 
     email: 'jane.does@gmail.com', 
@@ -21,7 +23,8 @@ export const usersDummyData = [
     selected: DEFAULT_SELECTED, 
   },
   { 
-    id: 3, 
+    id: 3,
+    userId: 'emilybrown', 
     firstName: "Emily", 
     lastName: "Brown", 
     email: 'emily.brown@gmail.com', 
@@ -30,7 +33,8 @@ export const usersDummyData = [
     selected: DEFAULT_SELECTED, 
   },
   { 
-    id: 4, 
+    id: 4,
+    userId: 'pepesmith', 
     firstName: "Pepe", 
     lastName: "Smith", 
     email: 'pepe.smith@gmail.com', 
