@@ -1,6 +1,6 @@
 const User = ({user, handleCheckboxChange }) => {
   return(
-    <tr data-testid='user-entry'>
+    <tr data-testid='userEntry'>
       <td>
         <input
           className="selectCheckbox"

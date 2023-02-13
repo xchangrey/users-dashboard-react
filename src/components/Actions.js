@@ -30,7 +30,7 @@ const Actions = ({
         <FontAwesomeIcon icon={faTrash} />
       </button>
       <div className="search-container">
-        <input type="text" placeholder="Search..." onChange={handleSearch} />
+        <input name="search" type="text" placeholder="Search..." onChange={handleSearch} />
       </div>
     </div>
   );
