@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent,cleanup } from '@testing-library/react';
 import User from '../components/User';
 import { usersDummyData } from '../helpers/usersDummyData';
 
