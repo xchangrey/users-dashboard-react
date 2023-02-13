@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import FormModal from "./FormModal";
-import Actions from "./Actions";
+
 import { DEFAULT_SELECTED, TITLE } from "../helpers/constants";
 import { usersDummyData } from "../helpers/usersDummyData";
+
+import FormModal from "./FormModal";
+import Actions from "./Actions";
 import User from "./User";
 
 const UsersTable = () => {
