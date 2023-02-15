@@ -44,6 +44,7 @@ const UsersTable = () => {
     const updatedUsers = users.filter((user) => !user.selected);
 
     setUsers(updatedUsers);
+    setSelectedAll(!selectedAll);
   };
 
   const handleEdit = (user) => {
@@ -158,7 +159,7 @@ const UsersTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center' }}>No users listed</td></tr>}
+          {filteredUsers.length === 0 && <tr><td colSpan={7} style={{ textAlign: 'center' }}>No users listed</td></tr>}
           {filteredUsers.map((user) => (
             <User 
               key={user.id}
