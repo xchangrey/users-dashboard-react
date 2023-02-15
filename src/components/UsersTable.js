@@ -73,7 +73,7 @@ const UsersTable = () => {
     }
 
     const newUser = {
-      id: users[users.length - 1]['id'] + 1,
+      id: users.length > 0 ? users[users?.length - 1]['id'] + 1: users.length + 1,
       userId: createUserId(user.firstName, user.lastName),
       ...user,
       selected: false,
