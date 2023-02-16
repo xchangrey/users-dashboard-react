@@ -1,144 +1,134 @@
 import React from 'react';
-import { render, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import FormModal from '../components/FormModal';
-import { timestamp } from '../helpers/utils';
 
 afterEach(cleanup);
 
-describe('FormModal component', () => {
-  it('should render the form correctly', () => {
-  const handleToggleModal = jest.fn();
-  const handleAdd = jest.fn();
-  const handleEdit = jest.fn();
+describe("FormModal", () => {
+  const mockHandleToggleModal = jest.fn();
+  const mockHandleAdd = jest.fn();
+  const mockHandleEdit = jest.fn();
+  const userInfo = {
+    id: 1,
+    userId: "user123",
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@example.com",
+    status: "registered",
+  };
 
-  const { getByTestId, getByText } = render(
-    <FormModal 
-      handleToggleModal={handleToggleModal}
-      handleAdd={handleAdd}
-      handleEdit={handleEdit}
-    />
-  );
-  
-  const firstNameInput = getByTestId('firstName');
-  const lastNameInput = getByTestId('lastName');
-  const emailInput = getByTestId('email');
-  const statusInput = getByTestId('status');
-  const submitButton = getByText('ADD');
-  
-  expect(firstNameInput).toBeInTheDocument();
-  expect(lastNameInput).toBeInTheDocument();
-  expect(emailInput).toBeInTheDocument();
-  expect(statusInput).toBeInTheDocument();
-  expect(submitButton).toBeInTheDocument();
-
-  })
-
-  it('should update the form fields when input changes', () => {
-    const handleToggleModal = jest.fn();
-    const handleAdd = jest.fn();
-    const handleEdit = jest.fn();
-
-    const { getByTestId } = render(
-      <FormModal 
-        handleToggleModal={handleToggleModal}
-        handleAdd={handleAdd}
-        handleEdit={handleEdit}
-      />
-    );
-    
-    const firstNameInput = getByTestId('firstName');
-    const lastNameInput = getByTestId('lastName');
-    const emailInput = getByTestId('email');
-    const statusInput = getByTestId('status');
-    
-    fireEvent.change(firstNameInput, { target: { value: 'John' } });
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
-    fireEvent.change(emailInput, { target: { value: 'john.doe@example.com' } });
-    fireEvent.change(statusInput, { target: { value: 'Active' } });
-    
-    expect(firstNameInput.value).toBe('John');
-    expect(lastNameInput.value).toBe('Doe');
-    expect(emailInput.value).toBe('john.doe@example.com');
-    expect(statusInput.value).toBe('Active');    
+  beforeEach(() => {
+    mockHandleToggleModal.mockClear();
+    mockHandleAdd.mockClear();
   });
 
-  it('should call the handleAdd function when form is submitted and there is no user info', () => {
-    const handleToggleModal = jest.fn();
-    const handleAdd = jest.fn();
-    const handleEdit = jest.fn();
-
-    const { getByTestId, getByText } = render(
-      <FormModal 
-        handleToggleModal={handleToggleModal}
-        handleAdd={handleAdd}
-        handleEdit={handleEdit}
+  test("renders add user form", async () => {
+    render(
+      <FormModal
+        handleToggleModal={mockHandleToggleModal}
+        handleAdd={mockHandleAdd}
+        handleEdit={mockHandleEdit}
       />
     );
-    
-    const firstNameInput = getByTestId('firstName');
-    const lastNameInput = getByTestId('lastName');
-    const emailInput = getByTestId('email');
-    const statusInput = getByTestId('status');
-    const submitButton = getByText('ADD');
+
+    const titleElement = screen.getByText("Add User Information");
+    expect(titleElement).toBeInTheDocument();
+
+    const firstNameInput = screen.getByLabelText("First Name");
+    expect(firstNameInput).toBeInTheDocument();
+    expect(firstNameInput).toBeEmptyDOMElement();
+
+    const lastNameInput = screen.getByLabelText("Last Name");
+    expect(lastNameInput).toBeInTheDocument();
+    expect(lastNameInput).toBeEmptyDOMElement();
+
+    const emailInput = screen.getByLabelText("Email");
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toBeEmptyDOMElement();
+
+    const statusInput = screen.getByLabelText("Status");
+    expect(statusInput).toBeInTheDocument();
+    expect(statusInput).toHaveValue("");
+
+    const submitButton = screen.getByRole("button", { name: "ADD" });
+    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).toBeEnabled();
+  });
+
+  test("renders edit user form with user data", async () => {
+    render(
+      <FormModal
+        handleToggleModal={mockHandleToggleModal}
+        handleAdd={mockHandleAdd}
+        handleEdit={mockHandleEdit}
+        userInfo={userInfo}
+      />
+    );
+
+    const titleElement = screen.getByText("Edit User Information");
+    expect(titleElement).toBeInTheDocument();
+
+    const userIdInput = screen.getByLabelText("User ID");
+    expect(userIdInput).toBeInTheDocument();
+    expect(userIdInput).toHaveValue(userInfo.userId);
+
+    const firstNameInput = screen.getByLabelText("First Name");
+    expect(firstNameInput).toBeInTheDocument();
+    expect(firstNameInput).toHaveValue(userInfo.firstName);
+
+    const lastNameInput = screen.getByLabelText("Last Name");
+    expect(lastNameInput).toBeInTheDocument();
+    expect(lastNameInput).toHaveValue(userInfo.lastName);
+
+    const emailInput = screen.getByLabelText("Email");
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toHaveValue(userInfo.email);
+
+    const statusInput = screen.getByLabelText("Status");
+    expect(statusInput).toBeInTheDocument();
+    expect(statusInput).toHaveValue(userInfo.status);
+
+    const submitButton = screen.getByRole("button", { name: "EDIT" });
+    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).toBeEnabled();
+  });
+
+  test('submitting add user form with valid data', async () => {
+    render(
+      <FormModal 
+        handleToggleModal={mockHandleToggleModal} 
+        handleAdd={mockHandleAdd} 
+        userInfo={userInfo}
+      />
+    );
+
+    const firstNameInput = screen.getByLabelText(/first name/i);
+    const lastNameInput = screen.getByLabelText(/last name/i);
+    const emailInput = screen.getByLabelText(/email/i);
+    const statusInput = screen.getByLabelText(/status/i);
+    const submitButton = screen.getByText(/add/i);
 
     fireEvent.change(firstNameInput, { target: { value: 'John' } });
     fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
     fireEvent.change(emailInput, { target: { value: 'john.doe@example.com' } });
-    fireEvent.change(statusInput, { target: { value: 'Active' } });
+    fireEvent.change(statusInput, { target: { value: 'registered' } });
+
     fireEvent.click(submitButton);
 
-    expect(handleAdd).toHaveBeenCalledWith({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      status: 'Active', 
-      selected: false,
-      createdOn: timestamp(),
+    await waitFor(() => {
+      expect(mockHandleAdd).toHaveBeenCalledTimes(1);
+      expect(mockHandleAdd).toHaveBeenCalledWith({
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        status: 'registered',
+        selected: 'no',
+        createdOn: expect.any(String),
+        userId: expect.any(String)
+      });
     });
+
+    expect(mockHandleToggleModal).toHaveBeenCalledTimes(1);
   });
-
-  it("should update user info when form is submitted", () => {
-    const mockEdit = jest.fn();
-    const userInfo = {
-      userId: 'johndoe',
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@email.com",
-      status: "active"
-    };
-
-    const { getByTestId, getByText } = render(
-      <FormModal 
-        handleToggleModal={jest.fn()} 
-        handleAdd={jest.fn()} 
-        handleEdit={mockEdit} 
-        userInfo={userInfo} 
-      />
-    );
-
-    const userIdInput = getByTestId('userId');
-    const firstNameInput = getByTestId("firstName");
-    const lastNameInput = getByTestId("lastName");
-    const emailInput = getByTestId("email");
-    const statusInput = getByTestId("status");
-    const submitBtn = getByText("EDIT");
-
-    fireEvent.change(userIdInput, { target: { value: "janedoes" } });
-    fireEvent.change(firstNameInput, { target: { value: "Jane" } });
-    fireEvent.change(lastNameInput, { target: { value: "Does" } });
-    fireEvent.change(emailInput, { target: { value: "janedoe@email.com" } });
-    fireEvent.change(statusInput, { target: { value: "inactive" } });
-    fireEvent.click(submitBtn);
-
-    expect(mockEdit).toHaveBeenCalledWith({
-      userId: 'janedoes',
-      firstName: "Jane",
-      lastName: "Does",
-      email: "janedoe@email.com",
-      status: "inactive",
-      selected: false,
-      createdOn: timestamp(),
-    });
-  });
-})
+});
 

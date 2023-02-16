@@ -6,7 +6,6 @@ import { usersDummyData } from "../helpers/usersDummyData";
 import FormModal from "./FormModal";
 import Actions from "./Actions";
 import User from "./User";
-import { createUserId } from "../helpers/utils";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -44,14 +43,15 @@ const UsersTable = () => {
     const updatedUsers = users.filter((user) => !user.selected);
 
     setUsers(updatedUsers);
-    setSelectedAll(!selectedAll);
   };
 
   const handleEdit = (user) => {
     const userIdExists = users.some((_user) => _user.userId === user.userId && user.userId !== userInfo.userId);
 
     if (userIdExists) {
-      return 'User ID already exists...'
+      return {
+        userId: 'User ID already exists',
+      };
     }
 
     setUsers(
@@ -63,24 +63,28 @@ const UsersTable = () => {
       })
     );
     setUserInfo({});
+
+    return null;
   };
 
   const handleAdd = (user) => {
-    const emailExists = users.some((_user) => _user.email === user.email);
-
-    if (emailExists){
-      return 'Email already exists...'
-    }
-
     const newUser = {
-      id: users.length > 0 ? users[users?.length - 1]['id'] + 1: users.length + 1,
-      userId: createUserId(user.firstName, user.lastName),
+      id: Math.max(...users.map(user => user.id)) + 1,
       ...user,
       selected: false,
     };
-
+    const emailExists = users.some((_user) => _user.email === user.email);
+  
+    if (emailExists){
+      return {
+        email: 'Email already exists',
+      };
+    }
+  
     setUsers([...users, newUser]);
-  };
+  
+    return null;
+  };  
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
