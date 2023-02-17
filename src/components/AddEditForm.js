@@ -4,11 +4,10 @@ import { Button, Grid, MenuItem } from "@mui/material";
 import { Select, TextField } from "formik-material-ui";
 
 import { createUserId, timestamp } from "../helpers/utils";
-import { DEFAULT_SELECTED } from "../helpers/constants";
+import { DEFAULT_SELECTED, SELECT_OPTIONS } from "../helpers/constants";
 import { basicSchema } from "../schemas";
 
-const AddEditForm = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }) => {
-  const [isEdit] = useState(Object.keys(userInfo).length > 0);
+const AddEditForm = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {}, isEdit }) => {
   const text = isEdit ? 'Edit' : 'Add';
   const initialValues = {
     ...userInfo,
@@ -42,10 +41,8 @@ const AddEditForm = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }
     }
   
     if (error && Object.keys(error).length > 0) {
-      console.log(error)
       actions.setErrors(error);
     } else {
-      console.log('nareset')
       actions.setErrors({});
       actions.resetForm();
 
@@ -116,8 +113,15 @@ const AddEditForm = ({ handleToggleModal, handleAdd, handleEdit, userInfo = {} }
               onBlur={handleBlur}
               onChange={handleChange}
             >
-              <MenuItem value="registered">Registered</MenuItem>
-              <MenuItem value="initiated">Initiated</MenuItem>
+              { 
+                SELECT_OPTIONS.map((option) => (
+                <MenuItem 
+                  key={option} 
+                  value={option}
+                >
+                  {option.toUpperCase()}
+                </MenuItem>))
+              }
             </Field>
           </Grid>
           <Grid item>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { DEFAULT_SELECTED, TABLE_HEADERS, TITLE } from "../helpers/constants";
+import { DEFAULT_SELECTED, HEADER_TEXT, TABLE_HEADERS, TITLE } from "../helpers/constants";
 import { usersDummyData } from "../helpers/usersDummyData";
 
 import AddEditForm from "./AddEditForm";
@@ -14,6 +14,7 @@ const UsersTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     setUsers(usersDummyData);
@@ -104,6 +105,7 @@ const UsersTable = () => {
 
     if (!showModal && !hasSelectedUser){
       setUserInfo({});
+      setIsEdit(false);
     }
   }
 
@@ -111,6 +113,7 @@ const UsersTable = () => {
     const [editUser] = users.filter((user) => user.selected);
 
     setUserInfo(editUser);
+    setIsEdit(true);
     handleToggleModal();
   }
 
@@ -184,7 +187,9 @@ const UsersTable = () => {
             showModal={showModal}
             handleToggleModal={handleToggleModal} 
           >
+            <h2 className='modal-title'>{isEdit ? HEADER_TEXT.EDIT : HEADER_TEXT.ADD}</h2>
             <AddEditForm 
+              isEdit={isEdit}
               handleToggleModal={handleToggleModal} 
               handleEdit={handleEdit}
               userInfo={userInfo}
