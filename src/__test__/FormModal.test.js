@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import FormModal from '../components/FormModal';
+import FormModal from '../components/AddEditForm';
+import { FormControl } from '@mui/material';
 
 afterEach(cleanup);
 
@@ -84,7 +85,7 @@ describe("FormModal", () => {
     expect(emailInput).toBeInTheDocument();
     expect(emailInput).toHaveValue(userInfo.email);
 
-    const statusInput = screen.getByLabelText("Status");
+    const statusInput = screen.getByText(/status/i);
     expect(statusInput).toBeInTheDocument();
     expect(statusInput).toHaveValue(userInfo.status);
 
@@ -129,6 +130,45 @@ describe("FormModal", () => {
     });
 
     expect(mockHandleToggleModal).toHaveBeenCalledTimes(1);
+  });
+
+  test('renders status field with selected value when editing', () => {
+    const userInfo = {
+      id: 1,
+      userId: 'johndoe',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      status: 'registered',
+    };
+    const handleToggleModal = jest.fn();
+    const handleAdd = jest.fn();
+    const handleEdit = jest.fn();
+  
+    render(
+      <FormControl>
+        <FormModal
+          handleToggleModal={handleToggleModal}
+          handleAdd={handleAdd}
+          handleEdit={handleEdit}
+          userInfo={userInfo}
+        />
+      </FormControl>
+    );
+  
+    const statusField = screen.getByLabelText(/status/i);
+    expect(statusField).toBeInTheDocument();
+    expect(statusField).toHaveValue('registered'); // assert the initial value
+  
+    userEvent.selectOptions(statusField, 'initiated'); // change the value
+    expect(statusField).toHaveValue('initiated');
+  
+    const submitButton = screen.getByRole('button', { name: /edit/i });
+    userEvent.click(submitButton); // submit the form
+    expect(handleEdit).toHaveBeenCalledWith({
+      ...userInfo,
+      status: 'initiated',
+    });
   });
 });
 

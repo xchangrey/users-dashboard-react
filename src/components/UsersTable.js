@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { DEFAULT_SELECTED, TITLE } from "../helpers/constants";
+import { DEFAULT_SELECTED, TABLE_HEADERS, TITLE } from "../helpers/constants";
 import { usersDummyData } from "../helpers/usersDummyData";
 
+import AddEditForm from "./AddEditForm";
 import FormModal from "./FormModal";
 import Actions from "./Actions";
 import User from "./User";
@@ -43,6 +44,10 @@ const UsersTable = () => {
     const updatedUsers = users.filter((user) => !user.selected);
 
     setUsers(updatedUsers);
+
+    if(selectedAll) {
+      setSelectedAll(!selectedAll);
+    }
   };
 
   const handleEdit = (user) => {
@@ -154,12 +159,12 @@ const UsersTable = () => {
                 onChange={handleSelectAll}
               />
             </th>
-            <th>User ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Created On</th>
+            <th>{TABLE_HEADERS.USER_ID}</th>
+            <th>{TABLE_HEADERS.FIRST_NAME}</th>
+            <th>{TABLE_HEADERS.LAST_NAME}</th>
+            <th>{TABLE_HEADERS.EMAIL}</th>
+            <th>{TABLE_HEADERS.STATUS}</th>
+            <th>{TABLE_HEADERS.CREATED_ON}</th>
           </tr>
         </thead>
         <tbody>
@@ -173,14 +178,21 @@ const UsersTable = () => {
           ))}
         </tbody>
       </table>
-      {showModal && (
-        <FormModal 
-          handleEdit={handleEdit}
-          userInfo={userInfo}
-          handleAdd={handleAdd} 
-          handleToggleModal={handleToggleModal} 
-        />
-      )}
+      {
+        showModal && (
+          <FormModal
+            showModal={showModal}
+            handleToggleModal={handleToggleModal} 
+          >
+            <AddEditForm 
+              handleToggleModal={handleToggleModal} 
+              handleEdit={handleEdit}
+              userInfo={userInfo}
+              handleAdd={handleAdd}
+            />
+          </FormModal>
+        )
+      }
     </div>
   );
 };
