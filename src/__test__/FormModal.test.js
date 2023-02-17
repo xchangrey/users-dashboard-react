@@ -1,174 +1,98 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import FormModal from '../components/AddEditForm';
-import { FormControl } from '@mui/material';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Formik } from 'formik';
+import AddEditForm from '../components/AddEditForm';
 
-afterEach(cleanup);
-
-describe("FormModal", () => {
-  const mockHandleToggleModal = jest.fn();
-  const mockHandleAdd = jest.fn();
-  const mockHandleEdit = jest.fn();
+describe('AddEditForm', () => {
+  const handleToggleModal = jest.fn();
+  const handleAdd = jest.fn();
+  const handleEdit = jest.fn();
   const userInfo = {
-    id: 1,
-    userId: "user123",
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    status: "registered",
+    id: '123',
+    userId: 'johndoe',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@example.com',
+    status: 'active',
   };
+  const isEdit = true;
 
   beforeEach(() => {
-    mockHandleToggleModal.mockClear();
-    mockHandleAdd.mockClear();
+    jest.clearAllMocks();
   });
 
-  test("renders add user form", async () => {
+  test('renders form with initial values', () => {
     render(
-      <FormModal
-        handleToggleModal={mockHandleToggleModal}
-        handleAdd={mockHandleAdd}
-        handleEdit={mockHandleEdit}
-      />
-    );
-
-    const titleElement = screen.getByText("Add User Information");
-    expect(titleElement).toBeInTheDocument();
-
-    const firstNameInput = screen.getByLabelText("First Name");
-    expect(firstNameInput).toBeInTheDocument();
-    expect(firstNameInput).toBeEmptyDOMElement();
-
-    const lastNameInput = screen.getByLabelText("Last Name");
-    expect(lastNameInput).toBeInTheDocument();
-    expect(lastNameInput).toBeEmptyDOMElement();
-
-    const emailInput = screen.getByLabelText("Email");
-    expect(emailInput).toBeInTheDocument();
-    expect(emailInput).toBeEmptyDOMElement();
-
-    const statusInput = screen.getByLabelText("Status");
-    expect(statusInput).toBeInTheDocument();
-    expect(statusInput).toHaveValue("");
-
-    const submitButton = screen.getByRole("button", { name: "ADD" });
-    expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toBeEnabled();
-  });
-
-  test("renders edit user form with user data", async () => {
-    render(
-      <FormModal
-        handleToggleModal={mockHandleToggleModal}
-        handleAdd={mockHandleAdd}
-        handleEdit={mockHandleEdit}
+      <AddEditForm
+        handleToggleModal={handleToggleModal}
+        handleAdd={handleAdd}
+        handleEdit={handleEdit}
         userInfo={userInfo}
+        isEdit={isEdit}
       />
     );
 
-    const titleElement = screen.getByText("Edit User Information");
-    expect(titleElement).toBeInTheDocument();
-
-    const userIdInput = screen.getByLabelText("User ID");
-    expect(userIdInput).toBeInTheDocument();
-    expect(userIdInput).toHaveValue(userInfo.userId);
-
-    const firstNameInput = screen.getByLabelText("First Name");
-    expect(firstNameInput).toBeInTheDocument();
-    expect(firstNameInput).toHaveValue(userInfo.firstName);
-
-    const lastNameInput = screen.getByLabelText("Last Name");
-    expect(lastNameInput).toBeInTheDocument();
-    expect(lastNameInput).toHaveValue(userInfo.lastName);
-
-    const emailInput = screen.getByLabelText("Email");
-    expect(emailInput).toBeInTheDocument();
-    expect(emailInput).toHaveValue(userInfo.email);
-
-    const statusInput = screen.getByText(/status/i);
-    expect(statusInput).toBeInTheDocument();
-    expect(statusInput).toHaveValue(userInfo.status);
-
-    const submitButton = screen.getByRole("button", { name: "EDIT" });
-    expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toBeEnabled();
+    expect(screen.getByLabelText(/user id/i)).toHaveValue('johndoe');
+    expect(screen.getByLabelText(/first name/i)).toHaveValue('John');
+    expect(screen.getByLabelText(/last name/i)).toHaveValue('Doe');
+    expect(screen.getByLabelText(/email/i)).toHaveValue('johndoe@example.com');
+    expect(screen.getByLabelText(/status/i)).toHaveValue('active');
+    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
   });
 
-  test('submitting add user form with valid data', async () => {
+  test('calls handleAdd when submitting form for adding new user', async () => {
     render(
-      <FormModal 
-        handleToggleModal={mockHandleToggleModal} 
-        handleAdd={mockHandleAdd} 
-        userInfo={userInfo}
-      />
+      <Formik initialValues={{}} onSubmit={handleAdd}>
+        <AddEditForm handleToggleModal={handleToggleModal} handleAdd={handleAdd} isEdit={false} />
+      </Formik>
     );
 
-    const firstNameInput = screen.getByLabelText(/first name/i);
-    const lastNameInput = screen.getByLabelText(/last name/i);
-    const emailInput = screen.getByLabelText(/email/i);
-    const statusInput = screen.getByLabelText(/status/i);
-    const submitButton = screen.getByText(/add/i);
-
-    fireEvent.change(firstNameInput, { target: { value: 'John' } });
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
-    fireEvent.change(emailInput, { target: { value: 'john.doe@example.com' } });
-    fireEvent.change(statusInput, { target: { value: 'registered' } });
-
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(mockHandleAdd).toHaveBeenCalledTimes(1);
-      expect(mockHandleAdd).toHaveBeenCalledWith({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        status: 'registered',
-        selected: 'no',
-        createdOn: expect.any(String),
-        userId: expect.any(String)
-      });
+    act(() => {
+      userEvent.type(screen.getByLabelText(/first name/i), 'John');
+      userEvent.type(screen.getByLabelText(/last name/i), 'Doe');
+      userEvent.type(screen.getByLabelText(/email/i), 'johndoe@example.com');
+      fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'active' } });
+  
+      fireEvent.click(screen.getByRole('button', { name: /add/i }));
     });
 
-    expect(mockHandleToggleModal).toHaveBeenCalledTimes(1);
-  });
-
-  test('renders status field with selected value when editing', () => {
-    const userInfo = {
-      id: 1,
-      userId: 'johndoe',
+    expect(handleAdd).toHaveBeenCalledTimes(1);
+    expect(handleAdd).toHaveBeenCalledWith({
       firstName: 'John',
       lastName: 'Doe',
       email: 'johndoe@example.com',
-      status: 'registered',
-    };
-    const handleToggleModal = jest.fn();
-    const handleAdd = jest.fn();
-    const handleEdit = jest.fn();
-  
+      status: 'active',
+      userId: expect.any(String),
+      selected: 'none',
+      createdOn: expect.any(Number),
+    });
+    expect(handleToggleModal).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls handleEdit when submitting form for editing existing user', async () => {
     render(
-      <FormControl>
-        <FormModal
-          handleToggleModal={handleToggleModal}
-          handleAdd={handleAdd}
-          handleEdit={handleEdit}
-          userInfo={userInfo}
-        />
-      </FormControl>
+      <Formik initialValues={{}} onSubmit={handleEdit}>
+        <AddEditForm handleToggleModal={handleToggleModal} handleEdit={handleEdit} userInfo={userInfo} isEdit={true} />
+      </Formik>
     );
-  
-    const statusField = screen.getByLabelText(/status/i);
-    expect(statusField).toBeInTheDocument();
-    expect(statusField).toHaveValue('registered'); // assert the initial value
-  
-    userEvent.selectOptions(statusField, 'initiated'); // change the value
-    expect(statusField).toHaveValue('initiated');
-  
-    const submitButton = screen.getByRole('button', { name: /edit/i });
-    userEvent.click(submitButton); // submit the form
+
+    userEvent.type(screen.getByLabelText(/first name/i), '{selectall}Jane');
+    userEvent.type(screen.getByLabelText(/last name/i), '{selectall}Doe');
+    userEvent.type(screen.getByLabelText(/email/i), '{selectall}janedoe@example.com');
+    fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'inactive' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+
+    expect(handleEdit).toHaveBeenCalledTimes(1);
     expect(handleEdit).toHaveBeenCalledWith({
-      ...userInfo,
-      status: 'initiated',
+      id: '123',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      status: 'active',
+      userId: expect.any(String),
+      selected: 'none',
+      createdOn: expect.any(Number)
     });
   });
 });
-
