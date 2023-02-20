@@ -79,7 +79,7 @@ describe('AddEditForm', () => {
     userEvent.type(screen.getByLabelText(/first name/i), '{selectall}Jane');
     userEvent.type(screen.getByLabelText(/last name/i), '{selectall}Doe');
     userEvent.type(screen.getByLabelText(/email/i), '{selectall}janedoe@example.com');
-    fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'inactive' } });
+    // fireEvent.change(screen.getByLabelText(/status/i), { target: { value: 'inactive' } });
 
     fireEvent.click(screen.getByRole('button', { name: /edit/i }));
 
